@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedConnect AI-Powered Emergency Response Flow</title>
+    <!-- Tailwind CSS for high fidelity modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff5f5',
+                            100: '#ffe3e3',
+                            500: '#ef4444', // Red Accent
+                            600: '#dc2626',
+                            glow: 'rgba(239, 68, 68, 0.4)',
+                        },
+                        cyber: {
+                            blue: '#06b6d4', // Cyan
+                            indigo: '#3b82f6', // Deep Blue
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'dash': 'dash 20s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+        .animate-dash-flow {
+            stroke-dasharray: 8, 12;
+            animation: dash 35s linear infinite;
+        }
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.3);
+            border-radius: 9999px;
+        }
+        /* Grid background pattern */
+        .grid-bg-light {
+            background-size: 24px 24px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
+        .grid-bg-dark {
+            background-size: 24px 24px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 transition-colors duration-300 font-sans grid-bg-light" id="appBody">
+
+    <header class="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80 transition-all">
+        <div class="mx-auto flex max-w-7xl h-16 items-center justify-between px-4 sm:px-6">
+            <!-- Brand Logo & Pitch Deck Badge -->
+            <div class="flex items-center gap-3">
+                <div class="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-red-600 text-white shadow-md shadow-brand-glow/40">
+                    <!-- Blood drop connected with rings -->
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C12 2 4 10 4 15C4 19.4183 7.58172 23 12 23C16.4183 23 20 19.4183 20 15C20 10 12 2 12 2Z" fill="currentColor"/>
+                        <circle cx="12" cy="15" r="3" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                    </span>
+                </div>
+                <div>
+                    <h1 class="font-heading text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        RedConnect
+                        <span class="hidden sm:inline-flex items-center rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-500 ring-1 ring-inset ring-brand-500/10 dark:bg-brand-950/30 dark:text-brand-400 dark:ring-brand-400/20">v2.1 AI Engine</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Emergency Blood Orchestration Platform</p>
+                </div>
+            </div>
+
+            <!-- Global Action Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-900 transition-colors" title="Toggle Theme">
+                    <!-- Sun Icon -->
+                    <svg id="sunIcon" class="hidden h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 4.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+                    </svg>
+                    <!-- Moon Icon -->
+                    <svg id="moonIcon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+
+                <!-- Start Simulation Button -->
+                <button onclick="triggerSimulation()" class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-brand-glow/30 hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-glow/40 transition-all transform hover:-translate-y-0.5">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Simulate Response</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-8">
+        
+        <!-- Pitch Deck / Info Banner -->
+        <div class="mb-8 rounded-2xl bg-gradient-to-r from-red-500/10 via-blue-500/10 to-transparent p-6 border border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-900/40 backdrop-blur-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <span class="inline-block text-xs font-bold uppercase tracking-widest text-brand-500 mb-1">Interactive System Demo</span>
+                    <h2 class="font-heading text-2xl font-extrabold text-slate-800 dark:text-white tracking-tight">AI Emergency Blood Orchestration Workflow</h2>
+                    <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl">
+                        A centralized pipeline connecting Users, Hospital verification engines, AI-matching algorithms, Active Donors, NGOs, and Real-Time Admin tracking dashboards to optimize critical care delivery times.
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        AI Engine: Live
+                    </div>
+                    <div class="flex items-center gap-1.5 rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-400">
+                        Average Response Time: 4.2m
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16:9 Canvas Workspace Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <section class="lg:col-span-8 bg-white dark:bg-slate-950 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xl overflow-hidden relative min-h-[720px] p-6 lg:p-8 flex flex-col justify-between transition-colors duration-300">
+                <!-- Watermark Grid Pattern background inside panel -->
+                <div class="absolute inset-0 opacity-100 pointer-events-none transition-colors" id="canvasGridOverlay"></div>
+                
+                <!-- Interactive Workflow Diagram (Symmetrical Flowchart Layout) -->
+                <div class="relative z-10 space-y-12">
+                    
+                    <!-- 1. User/Patient Card (Top Center) -->
+                    <div class="flex flex-col items-center">
+                        <div id="node-1" onclick="selectNode(1)" class="w-full max-w-md group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-md group-hover:shadow-lg group-hover:border-brand-500 dark:group-hover:border-brand-500 relative overflow-hidden transition-all duration-300">
+                                <!-- Subtle glowing accent gradient -->
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-brand-500"></div>
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 rounded-xl bg-brand-50 dark:bg-brand-950/30 text-brand-500 group-hover:scale-110 transition-transform">
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 01 &bull; Entrance</span>
+                                            <span class="inline-flex items-center gap-1 rounded bg-brand-50 dark:bg-brand-950/30 px-1.5 py-0.5 text-[10px] font-semibold text-brand-500">Active</span>
+                                        </div>
+                                        <h3 class="font-heading font-bold text-slate-800 dark:text-white mt-1">User & Patient Requests</h3>
+                                        <ul class="text-xs text-slate-500 dark:text-slate-400 mt-2 space-y-1">
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-brand-500"></span>
+                                                Raises real-time emergency blood requests
+                                            </li>
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-brand-500"></span>
+                                                Registers instantly as voluntary donor
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connective SVG Flow Line - Top to AI Platform -->
+                    <div class="flex justify-center h-12 -my-12">
+                        <svg class="w-8 h-12 overflow-visible" fill="none">
+                            <path id="line-1" d="M16 0V48" stroke="#cbd5e1" class="transition-colors duration-500" stroke-width="2.5" marker-end="url(#arrow-brand)"/>
+                            <path id="flow-1" d="M16 0V48" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                    </div>
+
+                    <!-- 2. Centralized Platform Core UI Node -->
+                    <div class="flex flex-col items-center">
+                        <div id="node-2" onclick="selectNode(2)" class="w-full max-w-lg group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-brand-100 dark:border-red-950 bg-gradient-to-br from-red-500/5 to-transparent dark:from-red-950/10 dark:to-transparent bg-white dark:bg-slate-900 p-5 shadow-lg group-hover:shadow-xl group-hover:border-brand-500 dark:group-hover:border-brand-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 right-0 p-2 bg-brand-500/10 dark:bg-brand-500/20 text-brand-500 text-[10px] font-mono tracking-widest uppercase font-bold rounded-bl-xl border-l border-b border-brand-200 dark:border-brand-900/40">Core Processor</div>
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3.5 rounded-xl bg-gradient-to-br from-brand-500 to-red-600 text-white shadow-md shadow-brand-glow/30 group-hover:scale-115 transition-all">
+                                        <svg class="h-7 w-7 animate-pulse-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 pr-24">
+                                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 02 &bull; Orchestrator</span>
+                                        <h3 class="font-heading font-extrabold text-slate-800 dark:text-white mt-1 flex items-center gap-2">
+                                            RedConnect Hub
+                                        </h3>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">AI-powered central dispatch prioritizing emergencies, parsing regional donor indexes, and organizing real-time platform channels.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connective SVG Flow Line - Platform to Hospital -->
+                    <div class="flex justify-center h-12 -my-12">
+                        <svg class="w-8 h-12 overflow-visible" fill="none">
+                            <path id="line-2" d="M16 0V48" stroke="#cbd5e1" class="transition-colors duration-500" stroke-width="2.5" marker-end="url(#arrow-brand)"/>
+                            <path id="flow-2" d="M16 0V48" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                    </div>
+
+                    <!-- 3. Hospital Verification Card -->
+                    <div class="flex flex-col items-center">
+                        <div id="node-3" onclick="selectNode(3)" class="w-full max-w-md group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-md group-hover:shadow-lg group-hover:border-cyan-500 dark:group-hover:border-cyan-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-cyan-500"></div>
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-500 group-hover:scale-110 transition-transform">
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 03 &bull; Hospital</span>
+                                            <span class="inline-flex items-center gap-1 rounded bg-cyan-50 dark:bg-cyan-950/30 px-1.5 py-0.5 text-[10px] font-semibold text-cyan-600">Verification</span>
+                                        </div>
+                                        <h3 class="font-heading font-bold text-slate-800 dark:text-white mt-1">Clinical Verification System</h3>
+                                        <ul class="text-xs text-slate-500 dark:text-slate-400 mt-2 space-y-1">
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-cyan-500"></span>
+                                                Validates immediate urgency level
+                                            </li>
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-cyan-500"></span>
+                                                Confirms clinician medical credentials
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connective SVG Flow Line - Hospital to Donor Matching -->
+                    <div class="flex justify-center h-12 -my-12">
+                        <svg class="w-8 h-12 overflow-visible" fill="none">
+                            <path id="line-3" d="M16 0V48" stroke="#cbd5e1" class="transition-colors duration-500" stroke-width="2.5" marker-end="url(#arrow-brand)"/>
+                            <path id="flow-3" d="M16 0V48" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                    </div>
+
+                    <!-- 4. Smart Donor Matching AI Card -->
+                    <div class="flex flex-col items-center">
+                        <div id="node-4" onclick="selectNode(4)" class="w-full max-w-lg group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-lg group-hover:shadow-xl group-hover:border-blue-500 dark:group-hover:border-blue-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 right-0 p-2 bg-blue-500/10 dark:bg-blue-500/20 text-blue-500 text-[10px] font-mono tracking-widest uppercase font-bold rounded-bl-xl border-l border-b border-blue-200 dark:border-blue-900/40">AI-ML Engine</div>
+                                <div class="flex items-center gap-4">
+                                    <div class="p-3.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md shadow-blue-500/30 group-hover:scale-115 transition-all">
+                                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 9h-1m3.15 7l-1.4 1.4M12 5.25a5.25 5.25 0 100 10.5 5.25 5.25 0 000-10.5z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1 pr-24">
+                                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 04 &bull; Intelligence</span>
+                                        <h3 class="font-heading font-extrabold text-slate-800 dark:text-white mt-1">Smart Donor Matching AI</h3>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Dynamic route calculation, real-time donor availability filters, and predictive compatibility analysis engine.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative h-20 -my-12">
+                        <!-- Desktop 3-way routing paths -->
+                        <svg class="absolute inset-0 w-full h-full hidden md:block overflow-visible" fill="none">
+                            <path id="split-line-main" d="M384 0V20" stroke="#cbd5e1" stroke-width="2" />
+                            <path id="split-line-left" d="M384 20H120V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+                            <path id="split-line-center" d="M384 20V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+                            <path id="split-line-right" d="M384 20H648V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+
+                            <!-- Active Pulse Overlays for Simulation -->
+                            <path id="split-flow-left" d="M384 0V20H120V80" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                            <path id="split-flow-center" d="M384 0V80" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                            <path id="split-flow-right" d="M384 0V20H648V80" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                        
+                        <!-- Mobile center single line fallback -->
+                        <div class="md:hidden flex justify-center h-full">
+                            <svg class="w-8 h-full overflow-visible" fill="none">
+                                <path d="M16 0V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- 5. Parallel Systems (Flex/Grid Layout) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                        
+                        <!-- 5A. Active Donors -->
+                        <div id="node-5" onclick="selectNode(5)" class="group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="h-full rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm group-hover:shadow-md group-hover:border-brand-500 dark:group-hover:border-brand-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-brand-500"></div>
+                                <div class="p-2.5 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-brand-500 w-fit mb-4">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.033 6.033 0 00-4.59-5.741C13.07 3.3 11.74 2 10 2 8.26 2 6.93 3.3 6.09 5.259A6.033 6.033 0 001.5 11v3.159c0 .538-.214 1.055-.595 1.436L0 17h5m10 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                </div>
+                                <h4 class="font-heading font-bold text-slate-800 dark:text-white">Active Donors</h4>
+                                <ul class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 space-y-2">
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-brand-500">&bull;</span>
+                                        Receive real-time critical target alerts
+                                    </li>
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-brand-500">&bull;</span>
+                                        Fast navigation vectors via in-app mapping
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 5B. NGO Coordination -->
+                        <div id="node-6" onclick="selectNode(6)" class="group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="h-full rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm group-hover:shadow-md group-hover:border-amber-500 dark:group-hover:border-amber-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
+                                <div class="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-500 w-fit mb-4">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                </div>
+                                <h4 class="font-heading font-bold text-slate-800 dark:text-white">NGO Coordination</h4>
+                                <ul class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 space-y-2">
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-amber-500">&bull;</span>
+                                        Deploy voluntary medical units fast
+                                    </li>
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-amber-500">&bull;</span>
+                                        Manage regional reserves & shortages
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 5C. Admin Monitoring Dashboard -->
+                        <div id="node-7" onclick="selectNode(7)" class="group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="h-full rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm group-hover:shadow-md group-hover:border-indigo-500 dark:group-hover:border-indigo-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
+                                <div class="p-2.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 text-indigo-500 w-fit mb-4">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"/>
+                                    </svg>
+                                </div>
+                                <h4 class="font-heading font-bold text-slate-800 dark:text-white">Admin Dashboard</h4>
+                                <ul class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 space-y-2">
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-indigo-500">&bull;</span>
+                                        Anti-fraud request filtering algorithms
+                                    </li>
+                                    <li class="flex items-start gap-1">
+                                        <span class="text-indigo-500">&bull;</span>
+                                        Real-time platform performance tracking
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="relative h-20 -my-12">
+                        <!-- Desktop lines merging back to Success node -->
+                        <svg class="absolute inset-0 w-full h-full hidden md:block overflow-visible" fill="none">
+                            <path d="M120 0V40H384" stroke="#cbd5e1" stroke-width="2" />
+                            <path d="M648 0V40H384" stroke="#cbd5e1" stroke-width="2" />
+                            <path id="merge-line-center" d="M384 0V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+
+                            <!-- Active Pulse Overlays for Simulation -->
+                            <path id="merge-flow-left" d="M120 0V40H384V80" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                            <path id="merge-flow-right" d="M648 0V40H384V80" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                        
+                        <!-- Mobile center single line fallback -->
+                        <div class="md:hidden flex justify-center h-full">
+                            <svg class="w-8 h-full overflow-visible" fill="none">
+                                <path d="M16 0V80" stroke="#cbd5e1" stroke-width="2" marker-end="url(#arrow-brand)"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- 6. Successful Coordination Card -->
+                    <div class="flex flex-col items-center pt-2">
+                        <div id="node-8" onclick="selectNode(8)" class="w-full max-w-md group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-md group-hover:shadow-lg group-hover:border-emerald-500 dark:group-hover:border-emerald-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 group-hover:scale-110 transition-transform">
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 05 &bull; Resolution</span>
+                                            <span class="inline-flex items-center gap-1 rounded bg-emerald-50 dark:bg-emerald-950/30 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600">Success</span>
+                                        </div>
+                                        <h3 class="font-heading font-bold text-slate-800 dark:text-white mt-1">Successful Coordination</h3>
+                                        <ul class="text-xs text-slate-500 dark:text-slate-400 mt-2 space-y-1">
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-emerald-500"></span>
+                                                Safe verification and transfer of blood
+                                            </li>
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-emerald-500"></span>
+                                                System-wide incident marked as resolved
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connective SVG Flow Line - Success to Rewards -->
+                    <div class="flex justify-center h-12 -my-12">
+                        <svg class="w-8 h-12 overflow-visible" fill="none">
+                            <path id="line-4" d="M16 0V48" stroke="#cbd5e1" class="transition-colors duration-500" stroke-width="2.5" marker-end="url(#arrow-brand)"/>
+                            <path id="flow-4" d="M16 0V48" stroke="#ef4444" stroke-width="3" stroke-linecap="round" class="animate-dash-flow opacity-0 transition-opacity duration-300"/>
+                        </svg>
+                    </div>
+
+                    <!-- 7. Reward & History System Card -->
+                    <div class="flex flex-col items-center">
+                        <div id="node-9" onclick="selectNode(9)" class="w-full max-w-md group cursor-pointer transform hover:-translate-y-1 transition-all duration-300">
+                            <div class="rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-md group-hover:shadow-lg group-hover:border-amber-500 dark:group-hover:border-amber-500 relative overflow-hidden transition-all duration-300">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-500"></div>
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-500 group-hover:scale-110 transition-transform">
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5a2 2 0 10-2 2h2zm0 0h4l-1 1h-3M12 8h-4l1-1h3"/>
+                                        </svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Step 06 &bull; Reward</span>
+                                            <span class="inline-flex items-center gap-1 rounded bg-amber-50 dark:bg-amber-950/30 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">Gamified</span>
+                                        </div>
+                                        <h3 class="font-heading font-bold text-slate-800 dark:text-white mt-1">Reward & History Engine</h3>
+                                        <ul class="text-xs text-slate-500 dark:text-slate-400 mt-2 space-y-1">
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-amber-500"></span>
+                                                Awards "Hero Badges" and volunteer points
+                                            </li>
+                                            <li class="flex items-center gap-1.5">
+                                                <span class="h-1 w-1 rounded-full bg-amber-500"></span>
+                                                Calculates donation cooldown tracking
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer tip -->
+                <div class="mt-8 text-center text-xs text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-900 pt-4">
+                    <span>💡 Tip: Click on any workflow node card to open live controls and view telemetry models.</span>
+                </div>
+
+                <!-- Custom SVG Arrows Head Definitions for pristine rendering -->
+                <svg class="absolute w-0 h-0">
+                    <defs>
+                        <marker id="arrow-brand" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444" />
+                        </marker>
+                    </defs>
+                </svg>
+            </section>
+
+            <aside class="lg:col-span-4 space-y-6">
+                
+                <!-- Detail Context Panel -->
+                <div class="bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-900 pb-4 mb-4">
+                        <h3 class="font-heading font-extrabold text-slate-800 dark:text-white flex items-center gap-2">
+                            <span class="inline-block h-2 w-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                            Node Inspector
+                        </h3>
+                        <span class="text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 px-2 py-1 rounded">Interactive</span>
+                    </div>
+
+                    <!-- Dynamic Container controlled by JavaScript -->
+                    <div id="inspector-placeholder" class="space-y-4">
+                        <!-- Default state before any node selection -->
+                        <div class="text-center py-12">
+                            <div class="mx-auto h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center text-slate-400 dark:text-slate-500 mb-3">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-heading font-semibold text-slate-800 dark:text-white text-sm">Select a Workflow Node</h4>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 max-w-xs mx-auto mt-1">
+                                Click on any step in the left canvas graph to explore its live status parameters and operational algorithms.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-indigo-500/5 via-blue-500/5 to-transparent bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 shadow-xl transition-colors duration-300">
+                    <h4 class="font-heading font-extrabold text-slate-800 dark:text-white flex items-center gap-2 text-sm mb-3">
+                        <svg class="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        Compatible Blood Matrix
+                    </h4>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Click target patient blood type to highlights safe, AI-suggested donor profiles instantly.</p>
+                    
+                    <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                        <button onclick="testMatch('O-')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">O-</button>
+                        <button onclick="testMatch('O+')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">O+</button>
+                        <button onclick="testMatch('A-')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">A-</button>
+                        <button onclick="testMatch('A+')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">A+</button>
+                        <button onclick="testMatch('B-')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">B-</button>
+                        <button onclick="testMatch('B+')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">B+</button>
+                        <button onclick="testMatch('AB-')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">AB-</button>
+                        <button onclick="testMatch('AB+')" class="matrix-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 dark:text-white font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">AB+</button>
+                    </div>
+
+                    <div id="compatibility-results" class="mt-4 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 hidden">
+                        <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider block mb-1">AI Recommendation Model</span>
+                        <div id="match-explain" class="text-xs text-slate-700 dark:text-slate-300"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 shadow-xl transition-colors duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-heading font-extrabold text-slate-800 dark:text-white text-sm">Real-Time Platform Logs</h4>
+                        <span class="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">Live feed</span>
+                    </div>
+                    
+                    <div class="h-44 overflow-y-auto rounded-xl bg-slate-900 p-3 font-mono text-[10px] text-slate-300 leading-relaxed space-y-2 border border-slate-800" id="log-box">
+                        <div class="text-slate-500">[SYSTEM INIT] RedConnect emergency dashboard live.</div>
+                        <div class="text-slate-500">[CRON_JOB] System verifying NGO credentials index (22 active clinics).</div>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 max-w-sm rounded-2xl bg-slate-900 dark:bg-slate-800 border border-slate-800 dark:border-slate-700 p-4 text-white shadow-2xl flex items-center gap-3">
+        <div class="h-8 w-8 rounded-lg bg-brand-500 flex items-center justify-center text-white shrink-0">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+        </div>
+        <div>
+            <div class="text-xs font-bold font-heading">Simulation Sequence Started</div>
+            <div class="text-[11px] text-slate-300 mt-0.5">Tracing request down the RedConnect verified node network.</div>
+        </div>
+    </div>
+
+    <script>
+        // Nodes database
+        const nodesData = {
+            1: {
+                title: "User & Patient Interface",
+                category: "Entrance Portal",
+                desc: "The public-facing gate where critical operations start. Patients raise request tokens that require instant validation, or voluntary donors sign up.",
+                metrics: [
+                    { label: "Daily New Requests", val: "340+", color: "text-brand-500" },
+                    { label: "Registered Donors", val: "18,450", color: "text-blue-500" }
+                ],
+                extraWidget: `
+                    <div class="space-y-3 mt-4 border-t border-slate-100 dark:border-slate-900 pt-4">
+                        <label class="block text-xs font-semibold text-slate-500">Simulate Raising Patient Request:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="mock-blood-type" placeholder="e.g. O- or AB+" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-brand-500">
+                            <button onclick="dispatchCustomRequest()" class="bg-brand-500 hover:bg-brand-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-colors">Raise</button>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "RedConnect Hub Orchestrator",
+                category: "Central Intelligence Core",
+                desc: "An intelligent central coordinator. Decouples verified blood demand from manual phone matching channels, automating delivery coordination metrics via API pipelines.",
+                metrics: [
+                    { label: "Active Queue Status", val: "Healthy", color: "text-emerald-500" },
+                    { label: "API Ping Latency", val: "14ms", color: "text-cyan-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4">
+                        <span class="text-xs font-bold text-slate-500 block mb-2">Central System Capacity Gauge:</span>
+                        <div class="w-full bg-slate-100 dark:bg-slate-900 rounded-full h-2">
+                            <div class="bg-brand-500 h-2 rounded-full" style="width: 78%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>Processing load: 78%</span>
+                            <span>Limit: 1.2M req/m</span>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "Clinical Verification System",
+                category: "Hospital Portal Security",
+                desc: "Prevents critical time leakage. Hospitals confirm clinical request credentials inside their EHR pipeline to filter fake requests automatically and assign priority parameters.",
+                metrics: [
+                    { label: "Accredited Partners", val: "84 Hospitals", color: "text-cyan-500" },
+                    { label: "Validation Timeout", val: "< 60s", color: "text-amber-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4 space-y-3">
+                        <span class="text-xs font-bold text-slate-500 block">Verify Urgency Priority Level:</span>
+                        <div class="flex gap-2">
+                            <button onclick="updateUrgencyColor('critical')" class="flex-1 bg-red-100 dark:bg-red-950/40 text-red-600 border border-red-200 dark:border-red-900/50 py-1 rounded text-center text-[10px] font-bold">CRITICAL</button>
+                            <button onclick="updateUrgencyColor('urgent')" class="flex-1 bg-amber-100 dark:bg-amber-950/40 text-amber-600 border border-amber-200 dark:border-amber-900/50 py-1 rounded text-center text-[10px] font-bold">URGENT</button>
+                            <button onclick="updateUrgencyColor('standard')" class="flex-1 bg-blue-100 dark:bg-blue-950/40 text-blue-600 border border-blue-200 dark:border-blue-900/50 py-1 rounded text-center text-[10px] font-bold">ROUTINE</button>
+                        </div>
+                    </div>
+                `
+            },
+            4: {
+                title: "Smart Donor Matching AI",
+                category: "Routing & Compatibility AI Engine",
+                desc: "An advanced mathematical analysis model. It calculates the minimum routing distance, checks biological donor blood compatibility matrix parameters, and evaluates donor readiness dynamically.",
+                metrics: [
+                    { label: "Distance Accuracy", val: "99.8%", color: "text-blue-500" },
+                    { label: "ML Model Acc.", val: "94.2%", color: "text-indigo-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4">
+                        <span class="text-xs font-bold text-slate-500 block mb-2">Distance Radius Filter Parameters:</span>
+                        <input type="range" min="1" max="25" value="10" class="w-full accent-blue-500" id="distanceRange" oninput="updateDistanceVal(this.value)">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>Scan Radius: <strong id="distanceVal" class="text-slate-700 dark:text-slate-300">10 km</strong></span>
+                            <span>O- Group Filter</span>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "Active Donors App",
+                category: "Recipient Client Layer",
+                desc: "Pushes silent and loud alarm alerts with precise distance logs onto compatible nearest registered device channels to navigate donor units seamlessly.",
+                metrics: [
+                    { label: "Active Mobile Units", val: "1,240 nearby", color: "text-brand-500" },
+                    { label: "App Alert Open Rate", val: "92%", color: "text-indigo-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4">
+                        <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="h-2 w-2 rounded-full bg-brand-500 animate-ping"></span>
+                                <span class="text-[10px] font-extrabold uppercase text-slate-500">Live Notification Mock</span>
+                            </div>
+                            <p class="text-xs font-bold text-slate-800 dark:text-white">"Emergency Red Alert!"</p>
+                            <p class="text-[10px] text-slate-500 mt-1">A critical case nearby needs your B- Blood Group. Tap to navigate now.</p>
+                        </div>
+                    </div>
+                `
+            },
+            6: {
+                title: "NGO Coordination Engine",
+                category: "Regional Reserve Logistics",
+                desc: "Activates regional volunteers, schedules high-volume community blood drive rosters, and triggers inventory warning banners across NGOs.",
+                metrics: [
+                    { label: "Affiliated NGOs", val: "12 Groups", color: "text-amber-500" },
+                    { label: "Volunteer Capacity", val: "450 Active", color: "text-cyan-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4">
+                        <span class="text-xs font-bold text-slate-500 block mb-2">Trigger Regional Shortage Alert:</span>
+                        <button onclick="triggerNGOAlert()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-1.5 rounded-lg text-xs transition-colors">Dispatch Emergency Drive Roster</button>
+                    </div>
+                `
+            },
+            7: {
+                title: "Admin Monitoring Control Tower",
+                category: "System Integrity Dashboard",
+                desc: "A back-office operations console allowing full request pattern analysis, anti-spam validation logs, and platform reliability controls.",
+                metrics: [
+                    { label: "Flagged Suspicious", val: "0% (Today)", color: "text-emerald-500" },
+                    { label: "System Load Factor", val: "Low-Normal", color: "text-blue-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4 flex gap-2">
+                        <button onclick="writeLog('ADMIN: Initiated custom platform optimization diagnostics', 'cyan')" class="flex-1 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 py-1.5 rounded text-[10px] font-bold transition-colors">Reset Anti-Spam</button>
+                        <button onclick="writeLog('ADMIN: Blocked single IP flooding request spam', 'red')" class="flex-1 bg-red-50 dark:bg-red-950/20 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/20 py-1.5 rounded text-[10px] font-bold transition-colors">Flag Test Spammer</button>
+                    </div>
+                `
+            },
+            8: {
+                title: "Successful Coordination Outcome",
+                category: "Operations Success Registry",
+                desc: "Registers successful completion. Triggers critical logs across partner hospitals, releasing pending donor units to prevent overlap allocation.",
+                metrics: [
+                    { label: "Resolved Incidents", val: "12,890+", color: "text-emerald-500" },
+                    { label: "Avg. Dispatch Time", val: "22m 14s", color: "text-emerald-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4 text-center">
+                        <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 mb-2">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Perfect matching safety assurance cycle closed.</p>
+                    </div>
+                `
+            },
+            9: {
+                title: "Reward & History Ledger",
+                category: "Gamification & Community Retention",
+                desc: "Validates future donor health guidelines, updates continuous ledger chains, delivers digital reward badges, and logs contribution values.",
+                metrics: [
+                    { label: "Hero Badges Claimed", val: "4,210", color: "text-amber-500" },
+                    { label: "Total Saved Lives", val: "38,670+", color: "text-brand-500" }
+                ],
+                extraWidget: `
+                    <div class="mt-4 border-t border-slate-100 dark:border-slate-900 pt-4 space-y-2">
+                        <span class="text-xs font-bold text-slate-500 block">Simulate Donor Rewards Card:</span>
+                        <div class="flex items-center gap-3 bg-gradient-to-r from-amber-500 to-red-500 p-3 rounded-xl text-white">
+                            <div class="p-2 bg-white/20 rounded-lg text-lg">🏅</div>
+                            <div>
+                                <h5 class="text-xs font-bold font-heading">Donor Badge: "Golden Drop"</h5>
+                                <p class="text-[9px] opacity-90">Issued for completing 5 voluntary donations.</p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.getElementById('appBody');
+            const sunIcon = document.getElementById('sunIcon');
+            const moonIcon = document.getElementById('moonIcon');
+            const overlay = document.getElementById('canvasGridOverlay');
+
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                body.classList.add('bg-slate-50', 'text-slate-900', 'grid-bg-light');
+                body.classList.remove('bg-slate-950', 'text-slate-100', 'grid-bg-dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                body.classList.add('dark');
+                body.classList.remove('bg-slate-50', 'text-slate-900', 'grid-bg-light');
+                body.classList.add('bg-slate-950', 'text-slate-100', 'grid-bg-dark');
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        }
+
+        // Selected Node state management
+        function selectNode(id) {
+            // Remove previous active highlights on all nodes
+            for (let i = 1; i <= 9; i++) {
+                const nodeEl = document.getElementById(`node-${i}`);
+                if (nodeEl) {
+                    nodeEl.classList.remove('scale-[1.02]', 'ring-2', 'ring-brand-500', 'border-brand-500', 'dark:ring-brand-500');
+                }
+            }
+
+            // Highlight current target
+            const activeNode = document.getElementById(`node-${id}`);
+            if (activeNode) {
+                activeNode.classList.add('scale-[1.02]', 'ring-2', 'ring-brand-500', 'border-brand-500', 'dark:ring-brand-500');
+            }
+
+            // Fill up inspector information
+            const item = nodesData[id];
+            const placeholder = document.getElementById('inspector-placeholder');
+            
+            let metricsHTML = '';
+            item.metrics.forEach(m => {
+                metricsHTML += `
+                    <div class="bg-slate-50 dark:bg-slate-900 rounded-2xl p-3 border border-slate-100 dark:border-slate-800">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase block">${m.label}</span>
+                        <span class="text-base font-extrabold ${m.color} mt-0.5 block">${m.val}</span>
+                    </div>
+                `;
+            });
+
+            placeholder.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <span class="text-[10px] font-bold text-brand-500 uppercase tracking-widest block">${item.category}</span>
+                        <h4 class="font-heading font-extrabold text-slate-800 dark:text-white text-base mt-0.5">${item.title}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">${item.desc}</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        ${metricsHTML}
+                    </div>
+
+                    ${item.extraWidget ? item.extraWidget : ''}
+                </div>
+            `;
+
+            writeLog(`Inspected node [${item.title}]`, 'white');
+        }
+
+        function writeLog(message, color = 'white') {
+            const logBox = document.getElementById('log-box');
+            const time = new Date().toLocaleTimeString();
+            let colorClass = 'text-slate-300';
+            
+            if (color === 'red') colorClass = 'text-red-400';
+            if (color === 'cyan') colorClass = 'text-cyan-400';
+            if (color === 'emerald') colorClass = 'text-emerald-400';
+
+            const logItem = document.createElement('div');
+            logItem.className = colorClass;
+            logItem.innerHTML = `[${time}] ${message}`;
+            logBox.appendChild(logItem);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // Interactive Matrix Testing Helper
+        function testMatch(bloodType) {
+            const results = document.getElementById('compatibility-results');
+            const explain = document.getElementById('match-explain');
+            results.classList.remove('hidden');
+
+            // Highlight chosen button
+            const buttons = document.querySelectorAll('.matrix-btn');
+            buttons.forEach(btn => {
+                if (btn.innerText === bloodType) {
+                    btn.classList.add('bg-indigo-500', 'text-white', 'border-indigo-500');
+                    btn.classList.remove('border-slate-200', 'dark:border-slate-800', 'dark:text-white');
+                } else {
+                    btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+                    btn.classList.add('border-slate-200', 'dark:border-slate-800', 'dark:text-white');
+                }
+            });
+
+            let response = "";
+            if (bloodType === 'O-') {
+                response = "<strong>O- (Universal Donor)</strong> can only receive blood from other O- individuals, but they can donate to all types! RedConnect prioritized scanning O- reserves nearby.";
+            } else if (bloodType === 'AB+') {
+                response = "<strong>AB+ (Universal Recipient)</strong> can receive blood from all blood types. Direct routes optimized across multiple donor pools.";
+            } else {
+                response = `Verified target request: <strong>${bloodType}</strong>. AI matching engine triggered query filtering matching identical groups and universal compatible groups nearby.`;
+            }
+
+            explain.innerHTML = response;
+            writeLog(`AI calculated compatibility parameters for Patient: ${bloodType}`, 'cyan');
+        }
+
+        // Urgency color changer inside clinical system widget
+        function updateUrgencyColor(level) {
+            writeLog(`Clinical Verification: Request Priority updated to [${level.toUpperCase()}]`, level === 'critical' ? 'red' : 'cyan');
+        }
+
+        // Custom radius widget slider interaction
+        function updateDistanceVal(val) {
+            document.getElementById('distanceVal').innerText = `${val} km`;
+            writeLog(`Smart Matching AI: Adjusted search scanning radius parameter to ${val}km`, 'white');
+        }
+
+        // NGO drive activation
+        function triggerNGOAlert() {
+            writeLog(`ALERT: NGO voluntary emergency drives deployed to balance regional deficits!`, 'emerald');
+        }
+
+        // Custom blood request trigger
+        function dispatchCustomRequest() {
+            const val = document.getElementById('mock-blood-type').value || "O-";
+            writeLog(`ALERT: Custom emergency request issued for blood type: ${val}`, 'red');
+            triggerSimulation();
+        }
+
+        function triggerSimulation() {
+            // Show toast
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+
+            // Phase Sequence Flow (lighting up nodes & active connecting SVG paths)
+            const delays = [0, 1000, 2000, 3000, 4000, 5000, 6500];
+            
+            // Log details
+            writeLog("Simulation starting: Initializing trace routing...", "white");
+
+            // 1. User Patient -> Platform
+            setTimeout(() => {
+                document.getElementById('flow-1').classList.remove('opacity-0');
+                document.getElementById('line-1').setAttribute('stroke', '#ef4444');
+                selectNode(1);
+                writeLog("[PHASE 1] O- Emergency patient requesting connection token...", "red");
+            }, delays[0]);
+
+            // 2. Central Platform Verification
+            setTimeout(() => {
+                document.getElementById('flow-2').classList.remove('opacity-0');
+                document.getElementById('line-2').setAttribute('stroke', '#ef4444');
+                selectNode(2);
+                writeLog("[PHASE 2] RedConnect Hub parsing request headers & geo-coordinates...", "white");
+            }, delays[1]);
+
+            // 3. Clinical verification
+            setTimeout(() => {
+                document.getElementById('flow-3').classList.remove('opacity-0');
+                document.getElementById('line-3').setAttribute('stroke', '#ef4444');
+                selectNode(3);
+                writeLog("[PHASE 3] Hospital verifying credentials & clinical status...", "cyan");
+            }, delays[2]);
+
+            // 4. ML Matchmaking Algorithms
+            setTimeout(() => {
+                // Light up the desktop splits
+                document.getElementById('split-flow-left').classList.remove('opacity-0');
+                document.getElementById('split-flow-center').classList.remove('opacity-0');
+                document.getElementById('split-flow-right').classList.remove('opacity-0');
+                
+                document.getElementById('split-line-left').setAttribute('stroke', '#ef4444');
+                document.getElementById('split-line-center').setAttribute('stroke', '#ef4444');
+                document.getElementById('split-line-right').setAttribute('stroke', '#ef4444');
+
+                selectNode(4);
+                writeLog("[PHASE 4] Matchmaking algorithm calculates 3 optimal transport routes...", "indigo");
+            }, delays[3]);
+
+            // 5. Triple system split triggers
+            setTimeout(() => {
+                selectNode(5);
+                writeLog("[PHASE 5] Active alerts broadcasted to nearest available O- donors.", "red");
+                writeLog("[NGO] Reserves alerted. Volunteer rosters standby.", "white");
+                writeLog("[ADMIN] Dynamic activity monitor logged matching status.", "white");
+                
+                // Light up merging arrows
+                document.getElementById('merge-flow-left').classList.remove('opacity-0');
+                document.getElementById('merge-flow-right').classList.remove('opacity-0');
+                document.getElementById('merge-line-center').setAttribute('stroke', '#ef4444');
+            }, delays[4]);
+
+            // 6. Success Resolution
+            setTimeout(() => {
+                document.getElementById('flow-4').classList.remove('opacity-0');
+                document.getElementById('line-4').setAttribute('stroke', '#ef4444');
+                selectNode(8);
+                writeLog("[SUCCESS] Target O- donor completed collection cycle inside 18 minutes! Emergency resolved.", "emerald");
+            }, delays[5]);
+
+            // 7. Rewards
+            setTimeout(() => {
+                selectNode(9);
+                writeLog("[REWARD] Awarded 50 Volunteer Points & Level Up to Donor.", "emerald");
+                
+                // Reset active line styling back to normal after completed trace sequence
+                setTimeout(() => {
+                    resetLines();
+                }, 4000);
+            }, delays[6]);
+        }
+
+        function resetLines() {
+            const lineIds = ['line-1', 'line-2', 'line-3', 'line-4', 'split-line-left', 'split-line-center', 'split-line-right', 'merge-line-center'];
+            const flowIds = ['flow-1', 'flow-2', 'flow-3', 'flow-4', 'split-flow-left', 'split-flow-center', 'split-flow-right', 'merge-flow-left', 'merge-flow-right'];
+            
+            lineIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.setAttribute('stroke', '#cbd5e1');
+            });
+            flowIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('opacity-0');
+            });
+            writeLog("Pipeline Trace cleared. Ready for next diagnostic query cycle.", "white");
+        }
+
+        // Initialize state on load
+        window.onload = function() {
+            selectNode(2); // Start by displaying Hub core
+        }
+    </script>
+</body>
+</html>
